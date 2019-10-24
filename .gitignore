@@ -1,1 +1,7 @@
 build-unix-old
+.gitignore.swp
+pkt_switch_v0
+pkt_switch_v2
+*.x
+*.o
+*.#*
