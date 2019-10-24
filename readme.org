@@ -1,0 +1,56 @@
+# -*- mode: org -*-
+#+STARTUP: indent hidestars showall
+
+* installation
+
+** install g++
+sudo apitute install g++-8
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 700 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+sudo update-alternatives --config 
+export CXX=g++
+export CXXFLAGS=-std=c++2a
+
+** install automake
+# because these are later versions 1.15 vs 1.14
+# need to redo the aclocal.ac
+sudo aptitude install autotools-dev
+sudo aptitude install automake
+
+** normal installation
+mkdir objdir
+../configure
+make clean
+make
+make check
+
+* Compilation with different c++17 c++14 c++11
+in gnu land, it is ok to link different versions together
+the important part is that you must link it with the appropriate
+libstdc++.so version which is g++-x version dependent, i.e. don't
+compile with different version of g++-x
+
+if you do update a g++ as in the above (from v7 to v8), then you
+need to recompile everything
+
+* compiling from examples directory by hand
+** in build-unix/Makefile.config
+You need to modify the following lines in Makefile.config
+SYSTEMC_HOME?=/home/adam/Downloads/SystemC/Core/systemc-2.3.3-c++17
+TARGET_ARCH = linux64
+SYSTEM_INC_DIR = $(SYSTEMC_HOME)/include 
+FLAGS_COMMON = -g -Wall -std=c++2a
+
+** in build-unix/Makefile.rules
+INCDIR += -I. -I.. -isystem $(SYSTEMC_INC_DIR)
+# required because gnu compiler has special flag for
+# adding <system> include files, i.e. things enclosed in
+# <>, which are normally reserved for system files
+
+* disable version check
+line 182 of $SYSTEMC_HOME)/include/sysc/kernel/sc_ver.h
+add the following (line 171):
+#define SC_DISABLE_API_VERSION_CHECK 1
+
+# note need to rebuild in order for the header file to be 
+# compiled into *.o files for proper linking
