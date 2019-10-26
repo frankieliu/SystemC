@@ -1,6 +1,6 @@
 include ../build-unix/Makefile.config
 
-PROJECT = nand 
+PROJECT = nand2
 SRCS    = $(wildcard *.cpp)
 OBJS    = $(SRCS:.cpp=.o)
 
