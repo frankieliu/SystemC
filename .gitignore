@@ -5,5 +5,7 @@ pkt_switch_v2
 *.x
 *.o
 *.#*
-Old:w
+Old
+Books
 Tutorial
+docs
